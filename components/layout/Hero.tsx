@@ -1,0 +1,45 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { VscSearchLarge } from 'react-icons/vsc';
+
+import { useRouter } from 'next/navigation';
+
+const Hero = () => {
+  const router = useRouter();
+
+  return (
+    <section className="relative flex w-full bg-[url('/bg-hero.jpg')] bg-cover bg-center bg-no-repeat h-70 z-100">
+      <div className="absolute flex w-full z-200 bg-linear-to-r/srgb from-[#440773ba] to-[#0088a0ca] top-0 left-0 h-70" />
+      <div className="flex flex-col w-full text-4xl font-bold leading-2 justify-center items-center z-300 text-white  typeset typeset-docs">
+        <h1 className="text-secondary font-light mb-4">
+          Read it. Learn it. Build it.
+        </h1>
+        <div>
+          <Field>
+            <ButtonGroup className="text-black mx-2">
+              <Input
+                id="input-button-group"
+                className="h-10 text-base md:text-lg font-light text-secondary placeholder:text-secondary/40"
+                placeholder="Type to search..."
+              />
+              <Button
+                variant="outline"
+                className="h-10 text-base md:text-lg font-light"
+                onClick={() => router.push('/search')}
+              >
+                <VscSearchLarge />
+                Search
+              </Button>
+            </ButtonGroup>
+          </Field>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
