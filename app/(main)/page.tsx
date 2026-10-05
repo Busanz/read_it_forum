@@ -1,8 +1,10 @@
 import HomePosts from '@/components/layout/HomePosts';
 import { getHomePosts } from '@/lib/supabase/queries';
+import { createClient } from '@/lib/supabase/serverClient';
 
 export default async function Home() {
-  const { data, error } = await getHomePosts();
+  const supabase = await createClient();
+  const { data, error } = await getHomePosts(supabase);
   if (error) throw error;
   // console.log(data, error);
   return (

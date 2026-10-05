@@ -1,8 +1,10 @@
 import { createClient } from './browserClient';
 import { type QueryData } from '@supabase/supabase-js';
 
-export const getHomePosts = async () => {
-  const supabase = createClient();
+export const getHomePosts = async (
+  supabase: ReturnType<typeof createClient>,
+) => {
+  // const supabase = createClient();
   return await supabase
     .from('td_post')
     .select(

@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Header from '../components/layout/Header';
-import Hero from '@/components/layout/Hero';
 import { QueryClientProvider } from '@/providers/queryProvider';
 
 const geist = Geist({
@@ -27,11 +25,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${geist.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col w-full items-center">
-        <QueryClientProvider>
-          <Header />
-          <Hero />
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider>{children}</QueryClientProvider>
       </body>
     </html>
   );

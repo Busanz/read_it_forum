@@ -32,11 +32,11 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative flex w-full bg-[url('/bg-hero.jpg')] bg-cover bg-center bg-no-repeat h-70 z-100">
+    <section className="relative flex w-full justify-center bg-[url('/bg-hero.jpg')] bg-cover bg-center bg-no-repeat h-70 z-100">
       <Toaster position="bottom-right" richColors />
       <div className="absolute flex w-full z-200 bg-linear-to-r/srgb from-[#440773ba] to-[#0088a0ca] top-0 left-0 h-70" />
       <div className="flex flex-col w-full text-4xl font-bold leading-2 justify-center items-center z-300 text-white  typeset typeset-docs">
-        <h1 className="text-secondary font-light mb-4">
+        <h1 className="text-center text-secondary font-light mb-4">
           Read it. Learn it. Build together.
         </h1>
         <div>
