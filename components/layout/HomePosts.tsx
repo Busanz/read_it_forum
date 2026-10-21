@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getHomePosts, HomePostType } from '@/lib/supabase/queries';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/browserClient';
+import { PostCard } from './PostCard';
 
 const HomePosts = ({ post }: { post: HomePostType }) => {
   const supabase = createClient();
@@ -16,20 +17,19 @@ const HomePosts = ({ post }: { post: HomePostType }) => {
     },
     initialData: post,
   });
+
   return (
     <>
       {data &&
         data.map((post) => (
-          <Link
-            href={`/${post.post_slug}`}
-            key={post.id}
-            className="flex flex-col items-center justify-center w-full max-w-3xl p-4 mb-3 font-black border border-destructive"
-          >
-            {post.post_title}
-            <p className="mt-4 font-extralight">{post.post_content}</p>
-            <p className="mt-4 font-extralight">
-              {post?.post_author?.user_name}
-            </p>
+          <Link key={post.id} href={`/${post.post_slug}`} className="w-full">
+            <PostCard
+              post_content={post.post_content || ''}
+              post_title={post.post_title}
+              post_img={post.post_img || ''}
+              post_author={post.post_author.user_name}
+              created_at={post.created_at}
+            />
           </Link>
         ))}
     </>

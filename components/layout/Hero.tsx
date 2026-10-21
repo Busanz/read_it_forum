@@ -26,7 +26,6 @@ const Hero = () => {
       });
       return;
     }
-
     router.push(`/search?query=${input.trim()}`);
     setInput('');
   };

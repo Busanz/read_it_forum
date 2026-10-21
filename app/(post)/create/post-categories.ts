@@ -1,0 +1,16 @@
+export const POST_CATEGORIES = [
+  { label: 'Select a category', value: null },
+  { label: 'Web Development', value: 'web-development' },
+  { label: 'Frontend', value: 'frontend' },
+  { label: 'Backend', value: 'backend' },
+  { label: 'Databases', value: 'databases' },
+  { label: 'DevOps & Cloud', value: 'devops-cloud' },
+  { label: 'Cybersecurity', value: 'cybersecurity' },
+  { label: 'AI & Machine Learning', value: 'ai-ml' },
+  { label: 'Mobile Development', value: 'mobile' },
+  { label: 'Networking', value: 'networking' },
+  { label: 'Hardware & Data Centers', value: 'hardware-data-centers' },
+  { label: 'Tools & Productivity', value: 'tools' },
+  { label: 'Career & Learning', value: 'career-learning' },
+  { label: 'General Discussion', value: 'general' },
+];

@@ -2,23 +2,10 @@
 
 import { createClient } from '@/lib/supabase/serverClient';
 import { redirect } from 'next/navigation';
-// import { signUpSchema } from './schemas';
-// import z from 'zod';
+import { signUpSchema } from './schema';
+import z from 'zod';
 
-// export const SignUp = async (userdata: z.infer<typeof signUpSchema>) => {
-export const SignUpAction = async (formdata: FormData) => {
-  // formdata: FormData
-  const userdata = {
-    email: formdata.get('fieldgroup-email') as string,
-    password: formdata.get('password') as string,
-    // username: formdata.get('fieldgroup-name') as string,
-    options: {
-      data: {
-        username: formdata.get('fieldgroup-name') as string,
-      },
-    },
-  };
-
+export const SignUpAction = async (userdata: z.infer<typeof signUpSchema>) => {
   const supabase = await createClient();
   const {
     data: { user },
@@ -33,7 +20,7 @@ export const SignUpAction = async (formdata: FormData) => {
       .insert({
         id: user.id,
         email_address: user.email,
-        user_name: userdata.options.data.username,
+        user_name: userdata.username,
       });
     if (insertSignUpUserError) throw insertSignUpUserError;
   }

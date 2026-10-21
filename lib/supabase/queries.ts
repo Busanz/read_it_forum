@@ -4,11 +4,10 @@ import { type QueryData } from '@supabase/supabase-js';
 export const getHomePosts = async (
   supabase: ReturnType<typeof createClient>,
 ) => {
-  // const supabase = createClient();
   return await supabase
     .from('td_post')
     .select(
-      'id, post_title, post_content, post_slug, post_author("id","user_name")',
+      'id, created_at, post_title, post_content, post_slug, post_img, post_author("id","user_name")',
     )
     .order('created_at', { ascending: false });
 };
@@ -17,7 +16,9 @@ export const getSinglePost = async (slug: string) => {
   const supabase = createClient();
   return await supabase
     .from('td_post')
-    .select('id, post_title, post_content, post_author("id","user_name")')
+    .select(
+      'id, post_title, post_content,post_img, post_author("id","user_name")',
+    )
     .eq('post_slug', slug)
     .single();
 };

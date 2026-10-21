@@ -1,6 +1,6 @@
 'use client';
 
-import { LogInAction } from '@/actions/login-action';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Field,
@@ -9,11 +9,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import Link from 'next/link';
+
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { logInSchema } from '@/actions/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { LogInAction } from '@/actions/login-action';
 
 const LogInForm = () => {
   const {
@@ -23,7 +24,6 @@ const LogInForm = () => {
     formState: { errors },
   } = useForm({ resolver: zodResolver(logInSchema) });
 
-  console.log('Frontend errors:', errors);
   const {
     mutate,
     error,
@@ -32,11 +32,12 @@ const LogInForm = () => {
   } = useMutation({
     mutationFn: LogInAction,
   });
-  console.log('Server error:', error);
+
   const handleReset = () => {
     resetClientErrors();
     resetServerError();
   };
+
   return (
     <form
       noValidate
@@ -55,7 +56,7 @@ const LogInForm = () => {
             {...register('email')}
             type="email"
             placeholder="name@example.com"
-            className="bg-background p-5 h-10 text-base md:text-lg"
+            className="bg-background text-base md:text-lg p-4.5"
           />
         </Field>
         {errors.email?.message && (
@@ -73,7 +74,7 @@ const LogInForm = () => {
             {...register('password')}
             type="password"
             required
-            className="bg-background p-5 h-10 text-lg md:text-xl"
+            className="bg-background text-lg md:text-xl p-4.5"
           />
         </Field>
         {errors.password?.message && (
@@ -84,7 +85,7 @@ const LogInForm = () => {
           <Button
             type="reset"
             variant="outline"
-            className="rounded-xl text-sm py-5 md:text-lg font-normal border px-8"
+            className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8"
             onClick={handleReset}
           >
             Reset
@@ -92,7 +93,7 @@ const LogInForm = () => {
           <Button
             type="submit"
             variant="outline"
-            className="rounded-xl text-sm py-5 md:text-lg font-normal border px-8 bg-foreground text-background"
+            className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8 bg-foreground text-background"
           >
             {isPending ? 'Loging in ...' : 'Log In'}
           </Button>
@@ -100,7 +101,7 @@ const LogInForm = () => {
         {error && <FieldError>{error.message}</FieldError>}
       </FieldGroup>
 
-      <div className="pt-10">
+      <div className="pt-8">
         Do not have accout?{' '}
         <Link href={'/oauth/signup'}>
           <span className="text-pacifica text-base font-semibold">
