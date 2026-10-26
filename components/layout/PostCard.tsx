@@ -19,6 +19,7 @@ type CardImageProps = {
   post_img: string;
   post_author: string;
   created_at: string;
+  post_comment_count: number;
 };
 
 export function PostCard({
@@ -27,6 +28,7 @@ export function PostCard({
   post_img,
   post_author,
   created_at,
+  post_comment_count,
 }: CardImageProps) {
   return (
     <Card className="relative mx-auto w-full mb-4">
@@ -34,7 +36,7 @@ export function PostCard({
         <CardAction>
           <Badge variant="secondary">Featured</Badge>
         </CardAction>
-        <CardTitle className="text-2xl text-header font-normal">
+        <CardTitle className="text-xl text-header font-normal">
           {post_title}
         </CardTitle>
         <div className="flex gap-3 my-3">
@@ -60,7 +62,7 @@ export function PostCard({
             />
           )}
 
-          <CardDescription className="font-normal text-xl pt-5">
+          <CardDescription className="font-normal text-lg pt-5">
             {truncateWords(post_content)}
           </CardDescription>
         </div>
@@ -68,7 +70,11 @@ export function PostCard({
       <CardFooter>
         <div className="flex font-extralight items-center">
           <TbMessage size={30} strokeWidth={0.75} />
-          <span>discussions</span>
+          <p className="pl-4">
+            {post_comment_count === 0
+              ? 'Add comment'
+              : `0${post_comment_count} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
+          </p>
         </div>
       </CardFooter>
     </Card>

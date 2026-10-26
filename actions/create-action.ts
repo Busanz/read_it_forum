@@ -12,9 +12,8 @@ import { uploadImage } from '@/lib/supabase/upload-image';
 export const CreatePostAction = async (
   userdata: z.infer<typeof createPostSchema>,
 ) => {
-  // console.log('This is the slug', generateSlug(userdata.post_title));
-  // console.log(userdata);
-  const postSlug = generateSlug(userdata.post_title);
+  const parsedData = createPostSchema.parse(userdata);
+  const postSlug = generateSlug(parsedData.post_title);
   const supabase = await createClient();
   const {
     data: { user },
@@ -42,7 +41,7 @@ export const CreatePostAction = async (
     post_img: imageUrl,
     post_author: user.id,
   });
-  console.log('Create new post', data);
+  // console.log('Create new post', data);
   if (error) throw error;
 
   // revalidatePath('/');

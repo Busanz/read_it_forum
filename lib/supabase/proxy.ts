@@ -29,12 +29,15 @@ export const updateSession = async (request: NextRequest) => {
     },
   );
 
-  const protectedRoutes: string[] = ['/create'];
+  const protectedRoutes: RegExp[] = [/^\/create$/, /^\/[^\/]+\/edit$/];
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user && protectedRoutes.includes(request.nextUrl.pathname)) {
+  if (
+    !user &&
+    protectedRoutes.some((route) => route.test(request.nextUrl.pathname))
+  ) {
     return NextResponse.redirect(new URL('/oauth/signup', request.url));
   }
 

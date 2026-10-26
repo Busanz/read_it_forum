@@ -23,23 +23,21 @@ import { createPostSchema } from '@/actions/schema';
 import { useMutation } from '@tanstack/react-query';
 import { CreatePostAction } from '@/actions/create-action';
 import z from 'zod';
+import { toast } from 'sonner';
 
 const CONTENT_MAX = 3000;
 
 const CreatePostForm = () => {
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
 
-  const postImageSchema = createPostSchema
-    .omit({ post_img: true })
-    // .extend({ post_img: z.instanceof(FileList).optional() });
-    .extend({
-      post_img: z
-        .unknown()
-        .transform((values) => {
-          return values as FileList;
-        })
-        .optional(),
-    });
+  const postImageSchema = createPostSchema.omit({ post_img: true }).extend({
+    post_img: z
+      .unknown()
+      .transform((values) => {
+        return values as FileList;
+      })
+      .optional(),
+  });
 
   const {
     register,
@@ -59,6 +57,7 @@ const CreatePostForm = () => {
     reset: resetServerError,
   } = useMutation({
     mutationFn: CreatePostAction,
+    onSettled: () => toast.success('Post has been created'),
   });
 
   const handleReset = () => {

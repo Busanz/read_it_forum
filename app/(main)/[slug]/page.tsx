@@ -1,9 +1,11 @@
 import Image from 'next/image';
-import { getSinglePost } from '@/lib/supabase/queries';
+import { getPostComments, getSinglePost } from '@/lib/supabase/queries';
 import { createClient } from '@/lib/supabase/serverClient';
 
 import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
+import Comments from '@/components/layout/Comments';
+import AddComment from './AddComment';
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
@@ -20,11 +22,17 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   const isAuthor: boolean =
     singlePost && user && user.id === singlePost.post_author.id ? true : false;
 
+  const { data: comments, error: commentsError } = await getPostComments(
+    singlePost.id,
+  );
+  if (commentsError) throw commentsError;
+  console.log(comments);
+
   console.log(isAuthor);
   return (
-    <section className="flex flex-col w-full p-10 items-center text-white">
+    <section className="flex flex-col w-full p-10 items-center">
       {singlePost && (
-        <div className="flex flex-col w-full max-w-4xl px-4 py-10 bg-red-500 ">
+        <div className="flex flex-col w-full max-w-4xl px-4 py-10 border ">
           <h1 className="text-2xl font-semibold pb-10">
             {singlePost.post_title}
           </h1>
@@ -42,6 +50,8 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
               />
             )}
           </div>
+          <div>{comments && <Comments comments={comments} />}</div>
+          {user && <AddComment postId={singlePost.id} />}
           {isAuthor && (
             <div className="flex items-center gap-5">
               <DeleteButton id={singlePost.id} />

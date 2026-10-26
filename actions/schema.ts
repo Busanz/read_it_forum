@@ -40,3 +40,9 @@ export const createPostSchema = z.object({
   post_content: z.string().optional(),
   post_img: z.instanceof(FormData).optional(),
 });
+
+export const commentSchema = z.object({
+  comment_content: z
+    .string()
+    .min(3, 'Comment mutbe at least 03 charactors...!'),
+});

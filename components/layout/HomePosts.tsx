@@ -29,6 +29,7 @@ const HomePosts = ({ post }: { post: HomePostType }) => {
               post_img={post.post_img || ''}
               post_author={post.post_author.user_name}
               created_at={post.created_at}
+              post_comment_count={post.td_comments?.[0]?.count ?? 0}
             />
           </Link>
         ))}

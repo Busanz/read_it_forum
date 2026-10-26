@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      td_comments: {
+        Row: {
+          comment_content: string
+          comment_post_id: string
+          comment_user_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          comment_content: string
+          comment_post_id: string
+          comment_user_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          comment_content?: string
+          comment_post_id?: string
+          comment_user_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "td_comments_comment_post_id_fkey"
+            columns: ["comment_post_id"]
+            isOneToOne: false
+            referencedRelation: "td_post"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "td_comments_comment_user_id_fkey"
+            columns: ["comment_user_id"]
+            isOneToOne: false
+            referencedRelation: "td_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       td_post: {
         Row: {
           created_at: string
