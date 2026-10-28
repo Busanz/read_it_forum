@@ -6,6 +6,8 @@ import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
 import Comments from '@/components/layout/Comments';
 import AddComment from './AddComment';
+import { PostCard } from '@/components/layout/PostCard';
+import { Card, CardHeader } from '@/components/ui/card';
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
   const { slug } = await params;
@@ -26,39 +28,42 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     singlePost.id,
   );
   if (commentsError) throw commentsError;
-  console.log(comments);
 
-  console.log(isAuthor);
   return (
-    <section className="flex flex-col w-full p-10 items-center">
+    <section className="flex flex-col items-center w-full max-w-4xl py-10 md:py-10 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
       {singlePost && (
-        <div className="flex flex-col w-full max-w-4xl px-4 py-10 border ">
-          <h1 className="text-2xl font-semibold pb-10">
-            {singlePost.post_title}
-          </h1>
-          {singlePost.post_content && <p>{singlePost.post_content}</p>}
-          <p className="flex w-fit ml-auto justify-end border border-white bg-amber-100/80 p-4 rounded-full">
-            {singlePost.post_author.user_name}
-          </p>
-          <div className="pb-10">
-            {singlePost.post_img && (
-              <Image
-                src={singlePost.post_img}
-                alt={singlePost.post_title}
-                width={300}
-                height={300}
-              />
-            )}
-          </div>
-          <div>{comments && <Comments comments={comments} />}</div>
-          {user && <AddComment postId={singlePost.id} />}
+        <>
+          <PostCard
+            post_content={singlePost.post_content || ''}
+            post_title={singlePost.post_title}
+            post_img={singlePost.post_img || ''}
+            post_author={singlePost.post_author.user_name}
+            created_at={singlePost.created_at}
+            isSlugPage={true}
+          />
+
+          <Card className="relative mx-auto w-full mb-4">
+            <CardHeader>
+              <div>
+                {comments && (
+                  <Comments
+                    comments={comments}
+                    isAuthor={isAuthor}
+                    currentUser={user ? user.id : null}
+                  />
+                )}
+              </div>
+              {user && <AddComment postId={singlePost.id} />}
+            </CardHeader>
+          </Card>
+
           {isAuthor && (
-            <div className="flex items-center gap-5">
+            <div className="flex w-full justify-end gap-5 pt-3">
               <DeleteButton id={singlePost.id} />
               <EditButton currentPostSlug={slug} />
             </div>
           )}
-        </div>
+        </>
       )}
     </section>
   );

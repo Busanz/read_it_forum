@@ -8,18 +8,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { TbMessage } from 'react-icons/tb';
 import { truncateWords } from '@/lib/helpers/truncate-words';
 import { humanizeTime } from '@/lib/helpers/humanize-time';
+import { getInitialUserName } from '@/lib/helpers/avatarInitials';
 
 type CardImageProps = {
   post_content: string;
   post_title: string;
-  post_img: string;
+  post_img?: string;
   post_author: string;
   created_at: string;
-  post_comment_count: number;
+  post_comment_count?: number;
+  isSlugPage?: boolean;
 };
 
 export function PostCard({
@@ -29,6 +31,7 @@ export function PostCard({
   post_author,
   created_at,
   post_comment_count,
+  isSlugPage = false,
 }: CardImageProps) {
   return (
     <Card className="relative mx-auto w-full mb-4">
@@ -36,13 +39,14 @@ export function PostCard({
         <CardAction>
           <Badge variant="secondary">Featured</Badge>
         </CardAction>
-        <CardTitle className="text-xl text-header font-normal">
+        <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10">
           {post_title}
         </CardTitle>
         <div className="flex gap-3 my-3">
           <Avatar size="lg">
-            <AvatarImage src="post_avatar.png" alt="@shadcn" />
-            <AvatarFallback>RIT</AvatarFallback>
+            <AvatarFallback className="bg-indigo-200">
+              {getInitialUserName(post_author)}
+            </AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
             <p className="font-bold text-base">{post_author}</p>
@@ -58,25 +62,28 @@ export function PostCard({
               width={100}
               height={100}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="relative z-20 aspect-video w-full  max-w-2xl"
+              className={`relative aspect-video w-full ${isSlugPage ? 'max-w-xl' : 'max-w-lg'}`}
             />
           )}
 
-          <CardDescription className="font-normal text-lg pt-5">
-            {truncateWords(post_content)}
+          <CardDescription className="font-normal text-base sm:text-[1.1rem] text-foreground py-5">
+            {!isSlugPage ? truncateWords(post_content) : post_content}
           </CardDescription>
         </div>
       </CardHeader>
-      <CardFooter>
-        <div className="flex font-extralight items-center">
-          <TbMessage size={30} strokeWidth={0.75} />
-          <p className="pl-4">
-            {post_comment_count === 0
-              ? 'Add comment'
-              : `0${post_comment_count} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
-          </p>
-        </div>
-      </CardFooter>
+
+      {post_comment_count && (
+        <CardFooter>
+          <div className="flex font-light items-center">
+            <TbMessage size={30} strokeWidth={0.75} />
+            <p className="pl-2 text-header">
+              {post_comment_count === 0
+                ? 'Add comment'
+                : `0${post_comment_count} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
+            </p>
+          </div>
+        </CardFooter>
+      )}
     </Card>
   );
 }

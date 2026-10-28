@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/serverClient';
-// import { revalidatePath } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import z from 'zod';
@@ -35,15 +35,14 @@ export const CreatePostAction = async (
       ? await uploadImage(imageFile)
       : null;
 
-  const { data, error } = await supabase.from('td_post').insert({
+  const { error } = await supabase.from('td_post').insert({
     ...userdata,
     post_slug: postSlug,
     post_img: imageUrl,
     post_author: user.id,
   });
-  // console.log('Create new post', data);
   if (error) throw error;
 
-  // revalidatePath('/');
+  revalidatePath('/');
   redirect(`/${postSlug}`);
 };

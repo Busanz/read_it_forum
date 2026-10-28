@@ -3,23 +3,26 @@ import { createClient } from '@/lib/supabase/serverClient';
 import { LogOutAction } from '@/actions/logout-action';
 
 import { Button } from '@/components/ui/button';
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  AvatarBadge,
-} from '@/components/ui/avatar';
 
 import { RxAvatar } from 'react-icons/rx';
 import { AiOutlineUserAdd } from 'react-icons/ai';
 import { IoIosLogOut } from 'react-icons/io';
 import { MdOutlinePostAdd } from 'react-icons/md';
+import { getSignedUserName } from '@/lib/supabase/queries';
+import UserPopover from './UserPopover';
 
 const AccountLinks = async () => {
   const supabase = await createClient();
   const {
     data: { user: signInUser },
   } = await supabase.auth.getUser();
+
+  let userName: string | null = null;
+
+  if (signInUser) {
+    const { data: signInUsername } = await getSignedUserName(signInUser.id);
+    userName = signInUsername?.user_name ?? null;
+  }
 
   return (
     <>
@@ -72,15 +75,15 @@ const AccountLinks = async () => {
           </Link>
         </>
       )}
-      <div>
-        <Avatar>
-          <AvatarImage src="avatar.png" alt="@shadcn" />
-          <AvatarFallback>RIT</AvatarFallback>
-          <AvatarBadge
-            className={`${signInUser ? 'bg-green-600' : 'bg-gray-400'} dark:bg-green-800`}
+      {signInUser && (
+        <div className="flex gap-2">
+          <UserPopover
+            userName={userName!}
+            signInUser={signInUser ? true : false}
+            signInUserEmail={signInUser!.email!}
           />
-        </Avatar>
-      </div>
+        </div>
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { BiEdit } from 'react-icons/bi';
 type EditButtonProps = {
   currentPostSlug: string;
 };
@@ -9,9 +10,9 @@ const EditButton = ({ currentPostSlug }: EditButtonProps) => {
   return (
     <Link
       href={`/${currentPostSlug}/edit`}
-      className="bg-green-400 px-10 py-2 cursor-pointer"
+      className="rounded-full text-sm md:text-lg font-normal border-0 px-8 py-2 bg-background text-foreground"
     >
-      EditButton
+      <BiEdit className="size-5" />
     </Link>
   );
 };

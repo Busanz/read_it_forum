@@ -17,7 +17,7 @@ export const getSinglePost = async (slug: string) => {
   return await supabase
     .from('td_post')
     .select(
-      'id, post_title, post_content,post_img, post_author("id","user_name")',
+      'id, post_title, post_content,post_img, created_at, post_author("id","user_name")',
     )
     .eq('post_slug', slug)
     .single();
@@ -27,7 +27,9 @@ export const getSearchResult = async (searchQuery: string) => {
   const supabase = createClient();
   return await supabase
     .from('td_post')
-    .select('id, post_title, post_content, post_slug')
+    .select(
+      'id, post_title, post_content, post_slug,created_at,post_author("id","user_name"),td_comments(count)',
+    )
     .textSearch('post_title', searchQuery);
 };
 
@@ -35,20 +37,22 @@ export const getPostComments = async (postId: string) => {
   const supabase = await createClient();
   return await supabase
     .from('td_comments')
-    .select('id, comment_content, comment_user_id("id","user_name")')
+    .select(
+      'id, comment_content, created_at, comment_user_id("id","user_name")',
+    )
     .eq('comment_post_id', postId)
     .order('created_at', { ascending: false });
 };
 
-// export const getPostCommentsCount = async (postId: string) => {
-//   const supabase = await createClient();
-//   const { count, error } = await supabase
-//     .from('td_comments')
-//     .select('id', { count: 'exact', head: true })
-//     .eq('comment_post_id', postId);
+export const getSignedUserName = async (id: string) => {
+  const supabase = await createClient();
+  return await supabase
+    .from('td_users')
+    .select('user_name')
+    .eq('id', id)
+    .single();
+};
 
-//   return { count: count ?? 0, error };
-// };
 export type HomePostType = QueryData<ReturnType<typeof getHomePosts>>;
 export type SinglePostType = QueryData<ReturnType<typeof getSinglePost>>;
 export type SearchResultType = QueryData<ReturnType<typeof getSearchResult>>;

@@ -57,7 +57,7 @@ const CreatePostForm = () => {
     reset: resetServerError,
   } = useMutation({
     mutationFn: CreatePostAction,
-    onSettled: () => toast.success('Post has been created'),
+    onSettled: () => toast.success('Post has been'),
   });
 
   const handleReset = () => {
@@ -78,7 +78,7 @@ const CreatePostForm = () => {
           post_img: imageForm,
         });
       })}
-      className="flex flex-col w-full max-w-xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
+      className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>
         <Field data-invalid={!!errors.post_title}>
@@ -144,8 +144,7 @@ const CreatePostForm = () => {
             id="post_img"
             type="file"
             {...register('post_img')}
-            placeholder="Upload image file here..."
-            className="bg-background p-5 h-10 text-base md:text-lg"
+            className="bg-background h-10 text-base md:text-lg cursor-pointer"
           />
           {errors.post_img && <FieldError errors={[errors.post_img]} />}
         </Field>

@@ -23,10 +23,10 @@ const DeleteButton = ({ id }: { id: string }) => {
       <Button
         type="button"
         variant="outline"
-        className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-5 bg-foreground text-background"
+        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-0 px-8 text-foreground cursor-pointer"
         onClick={() => setShowConfirmAlert(true)}
       >
-        <RiDeleteBin5Line />
+        <RiDeleteBin5Line className="size-5" />
       </Button>
       <ConfirmAlert
         title="Do you want to delete post"

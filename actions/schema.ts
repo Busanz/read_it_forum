@@ -42,7 +42,5 @@ export const createPostSchema = z.object({
 });
 
 export const commentSchema = z.object({
-  comment_content: z
-    .string()
-    .min(3, 'Comment mutbe at least 03 charactors...!'),
+  comment_content: z.string().min(3, 'Comment must be at least 03 charactors'),
 });
