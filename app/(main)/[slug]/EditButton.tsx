@@ -9,7 +9,7 @@ type EditButtonProps = {
 const EditButton = ({ currentPostSlug }: EditButtonProps) => {
   return (
     <Link
-      href={`/${currentPostSlug}/edit`}
+      href={`edit/${currentPostSlug}/`}
       className="rounded-full text-sm md:text-lg font-normal border-0 px-8 py-2 bg-background text-foreground"
     >
       <BiEdit className="size-5" />

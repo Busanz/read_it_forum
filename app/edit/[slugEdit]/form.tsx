@@ -97,7 +97,7 @@ const EditPostForm = ({
           postId,
         });
       })}
-      className="flex flex-col w-full max-w-xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
+      className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>
         <Field data-invalid={!!errors.post_title}>
@@ -155,7 +155,7 @@ const EditPostForm = ({
           <Field data-invalid={!!errors.post_title}>
             <FieldLabel
               htmlFor="post_img"
-              className="text-pacifica text-base font-semibold"
+              className="text-pacifica text-base font-semibold pb-2"
             >
               Upload Image(s)
               <span className="text-sm font-light">{`( optional )`}</span>
@@ -170,8 +170,7 @@ const EditPostForm = ({
               id="post_img"
               type="file"
               {...register('post_img')}
-              placeholder="Upload image file here..."
-              className="bg-background p-5 h-10 text-base md:text-lg"
+              className="bg-background h-10 text-base md:text-lg mt-3"
             />
             {errors.post_img && <FieldError errors={[errors.post_img]} />}
           </Field>

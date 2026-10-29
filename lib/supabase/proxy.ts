@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const updateSession = async (request: NextRequest) => {
   let supabaseResponse = NextResponse.next({ request });
+  const { pathname } = request.nextUrl;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL as string,
@@ -29,7 +30,7 @@ export const updateSession = async (request: NextRequest) => {
     },
   );
 
-  const protectedRoutes: RegExp[] = [/^\/create$/, /^\/[^\/]+\/edit$/];
+  const protectedRoutes: RegExp[] = [/^\/create$/, /^\/edit\/[^\/]+\/?$/];
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -39,6 +40,10 @@ export const updateSession = async (request: NextRequest) => {
     protectedRoutes.some((route) => route.test(request.nextUrl.pathname))
   ) {
     return NextResponse.redirect(new URL('/oauth/signup', request.url));
+  }
+
+  if (pathname === '/edit' || pathname === '/edit/') {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return supabaseResponse;
