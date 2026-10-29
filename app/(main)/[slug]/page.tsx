@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { getPostComments, getSinglePost } from '@/lib/supabase/queries';
 import { createClient } from '@/lib/supabase/serverClient';
 
@@ -39,6 +38,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
             post_img={singlePost.post_img || ''}
             post_author={singlePost.post_author.user_name}
             created_at={singlePost.created_at}
+            post_comment_count={comments.length ?? 0}
             isSlugPage={true}
           />
 

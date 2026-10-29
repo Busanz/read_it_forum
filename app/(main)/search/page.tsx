@@ -13,7 +13,7 @@ const SearchResultPage = async ({
   if (error) throw error;
 
   return (
-    <section className="flex flex-col items-center w-full max-w-5xl py-5 md:py-6 mx-4 px-4 md:px-10 mt-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
+    <section className="flex flex-col items-center w-full max-w-5xl py-5 md:py-6 mx-4 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
       <h1 className="flex w-full justify-start items-center text-xl sm:text-2xl font-light text-header pb-3">
         Search results -
         <span className="pl-2">
