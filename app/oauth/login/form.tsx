@@ -98,7 +98,9 @@ const LogInForm = () => {
             {isPending ? 'Loging in ...' : 'Log In'}
           </Button>
         </Field>
-        {error && <FieldError>{error.message}</FieldError>}
+        {error && !error.message.includes('NEXT_REDIRECT') && (
+          <FieldError>{error.message}</FieldError>
+        )}
       </FieldGroup>
 
       <div className="pt-8">

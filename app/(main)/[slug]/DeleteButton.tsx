@@ -4,15 +4,20 @@ import { DeletePostAction } from '@/actions/delete-action';
 import ConfirmAlert from '@/components/layout/ConfirmAlert';
 import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { toast } from 'sonner';
 
 const DeleteButton = ({ id }: { id: string }) => {
+  const router = useRouter();
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
   const { mutate } = useMutation({
     mutationFn: DeletePostAction,
-    onSettled: () => toast.success('Post has been deleted'),
+    onSuccess: () => {
+      toast.success('Post has been deleted');
+      router.push('/');
+    },
   });
 
   const handleClick = () => {

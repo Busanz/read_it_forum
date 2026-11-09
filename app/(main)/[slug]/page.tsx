@@ -29,13 +29,14 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   if (commentsError) throw commentsError;
 
   return (
-    <section className="flex flex-col items-center w-full max-w-4xl py-10 md:py-10 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
+    <section className="flex flex-col items-center w-full max-w-5xl py-10 md:py-10 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
       {singlePost && (
         <>
           <PostCard
+            post_id={singlePost.id}
             post_content={singlePost.post_content || ''}
             post_title={singlePost.post_title}
-            post_img={singlePost.post_img || ''}
+            post_img={singlePost.td_image.map((img) => img.image_url)}
             post_author={singlePost.post_author.user_name}
             created_at={singlePost.created_at}
             post_comment_count={comments.length ?? 0}
@@ -68,5 +69,4 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     </section>
   );
 };
-
 export default PostPage;

@@ -21,44 +21,52 @@ import { type Tables } from '@/lib/supabase/database.types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { EditPostAction } from '@/actions/edit-action';
-import z from 'zod';
+import { toast } from 'sonner';
+import { RxCross2 } from 'react-icons/rx';
+import {
+  Attachment,
+  AttachmentContent,
+  AttachmentGroup,
+  AttachmentMedia,
+  AttachmentTitle,
+} from '@/components/ui/attachment';
+import ImagePreviews from '@/components/layout/ImagePreviews';
+import { useRouter } from 'next/navigation';
 
 const CONTENT_MAX = 3000;
+const IMAGE_MAX_NUM = 3;
 
-const EditPostForm = ({
-  initialValues,
-  postId,
-}: {
-  initialValues: Pick<
-    Tables<'td_post'>,
-    'post_title' | 'post_content' | 'post_img'
-  >;
+type EditPostFormProps = {
+  initialValues: Pick<Tables<'td_post'>, 'post_title' | 'post_content'> & {
+    post_images: string[];
+  };
   postId: string;
-}) => {
+};
+
+const EditPostForm = ({ initialValues, postId }: EditPostFormProps) => {
+  const router = useRouter();
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
-  const postImageSchema = createPostSchema.omit({ post_img: true }).extend({
-    post_img: z
-      .unknown()
-      .transform((values) => {
-        return values as FileList;
-      })
-      .optional(),
-  });
+  const [isAddingImages, setIsAddingImages] = useState(false);
+  const [existingImages, setExistingImages] = useState<string[]>(
+    initialValues.post_images,
+  );
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const {
     register,
     control,
+    trigger,
     reset: resetClientErrors,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(postImageSchema),
+    resolver: zodResolver(createPostSchema),
     defaultValues: {
       post_title: initialValues.post_title,
       post_content: initialValues.post_content || undefined,
-      post_img: initialValues.post_img || undefined,
+      post_img: [] as File[],
     },
   });
 
@@ -69,11 +77,17 @@ const EditPostForm = ({
     reset: resetServerError,
   } = useMutation({
     mutationFn: EditPostAction,
+    onSuccess: ({ slug }) => {
+      toast.success('Post has been updated');
+      router.push(`/${slug}`);
+    },
   });
 
   const handleReset = () => {
     resetClientErrors();
     resetServerError();
+    setExistingImages(initialValues.post_images);
+    setIsAddingImages(false);
     setShowConfirmAlert(false);
   };
 
@@ -81,20 +95,14 @@ const EditPostForm = ({
     <form
       noValidate
       onSubmit={handleSubmit((values) => {
-        let imageForm = undefined;
-
-        if (values.post_img && typeof values.post_img !== 'string') {
-          imageForm = new FormData();
-          imageForm.append('post_img', values.post_img[0]);
-        }
-
         mutate({
+          postId,
           postData: {
             post_title: values.post_title,
             post_content: values.post_content,
-            post_img: imageForm,
+            post_img: values.post_img ?? [],
+            keep_image_urls: existingImages,
           },
-          postId,
         });
       })}
       className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
@@ -151,30 +159,121 @@ const EditPostForm = ({
             </Field>
           )}
         />
-        {initialValues.post_img && (
-          <Field data-invalid={!!errors.post_title}>
-            <FieldLabel
-              htmlFor="post_img"
-              className="text-pacifica text-base font-semibold pb-2"
-            >
-              Upload Image(s)
-              <span className="text-sm font-light">{`( optional )`}</span>
-            </FieldLabel>
-            <Image
-              src={initialValues.post_img}
-              alt={initialValues.post_title}
-              width={500}
-              height={400}
-            />
-            <Input
-              id="post_img"
-              type="file"
-              {...register('post_img')}
-              className="bg-background h-10 text-base md:text-lg mt-3"
-            />
-            {errors.post_img && <FieldError errors={[errors.post_img]} />}
-          </Field>
-        )}
+
+        <Field data-invalid={!!errors.post_img}>
+          <FieldLabel
+            htmlFor="post_img"
+            className="text-pacifica text-base font-semibold"
+          >
+            Upload up to {IMAGE_MAX_NUM} images
+            <span className="text-sm font-light">{`( optional )`}</span>
+          </FieldLabel>
+
+          <Controller
+            name="post_img"
+            control={control}
+            render={({ field }) => {
+              const files = (field.value as File[] | undefined) ?? [];
+              const total = existingImages.length + files.length;
+              const limitReached = total >= IMAGE_MAX_NUM;
+              const isBusy = isAddingImages || isPending;
+
+              return (
+                <>
+                  <Input
+                    ref={fileInputRef}
+                    id="post_img"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                    onChange={async (e) => {
+                      const picked = Array.from(e.target.files ?? []);
+                      e.target.value = '';
+                      if (picked.length === 0) return;
+
+                      setIsAddingImages(true);
+                      try {
+                        field.onChange(
+                          [...files, ...picked].slice(
+                            0,
+                            IMAGE_MAX_NUM - existingImages.length,
+                          ),
+                        );
+                        void trigger('post_img');
+                      } finally {
+                        setIsAddingImages(false);
+                      }
+                    }}
+                  />
+                  <div className="flex gap-3">
+                    {existingImages.length > 0 && (
+                      <AttachmentGroup>
+                        {existingImages.map((url, index) => (
+                          <Attachment
+                            key={url}
+                            orientation="vertical"
+                            className="relative"
+                          >
+                            <AttachmentMedia variant="image">
+                              <Image
+                                src={url}
+                                alt={`Current image ${index + 1}`}
+                                fill
+                                loading="eager"
+                                sizes="(max-width: 768px) 100vw, 512px"
+                              />
+                            </AttachmentMedia>
+                            <AttachmentContent>
+                              <AttachmentTitle>
+                                Uploaded 0{index + 1}
+                              </AttachmentTitle>
+                            </AttachmentContent>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExistingImages((prev) =>
+                                  prev.filter((u) => u !== url),
+                                )
+                              }
+                              aria-label={`Remove current image ${index + 1}`}
+                              className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-white hover:bg-black"
+                            >
+                              <RxCross2 />
+                            </button>
+                          </Attachment>
+                        ))}
+                      </AttachmentGroup>
+                    )}
+                    <ImagePreviews
+                      files={files}
+                      onRemove={(index) => {
+                        field.onChange(files.filter((_, i) => i !== index));
+                        void trigger('post_img');
+                      }}
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={limitReached || isBusy}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {isBusy ? 'Uploading..' : 'Choose images'}
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {total} / {IMAGE_MAX_NUM} selected
+                    </span>
+                  </div>
+                </>
+              );
+            }}
+          />
+
+          {errors.post_img && <FieldError errors={[errors.post_img]} />}
+        </Field>
 
         <Field orientation="horizontal">
           <Button
@@ -195,7 +294,9 @@ const EditPostForm = ({
           </Button>
         </Field>
 
-        {error && <FieldError>{error.message}</FieldError>}
+        {error && !error.message.includes('NEXT_REDIRECT') && (
+          <FieldError>{error.message}</FieldError>
+        )}
       </FieldGroup>
 
       <ConfirmAlert

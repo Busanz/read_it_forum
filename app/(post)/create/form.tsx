@@ -17,36 +17,33 @@ import {
 import ConfirmAlert from '@/components/layout/ConfirmAlert';
 
 import { Controller, useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createPostSchema } from '@/actions/schema';
 import { useMutation } from '@tanstack/react-query';
 import { CreatePostAction } from '@/actions/create-action';
-import z from 'zod';
 import { toast } from 'sonner';
+import ImagePreviews from '@/components/layout/ImagePreviews';
+import { useRouter } from 'next/navigation';
 
 const CONTENT_MAX = 3000;
+const IMAGE_MAX_NUM = 3;
 
 const CreatePostForm = () => {
+  const router = useRouter();
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
-
-  const postImageSchema = createPostSchema.omit({ post_img: true }).extend({
-    post_img: z
-      .unknown()
-      .transform((values) => {
-        return values as FileList;
-      })
-      .optional(),
-  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isAddingImages, setIsAddingImages] = useState(false);
 
   const {
     register,
     control,
+    trigger,
     handleSubmit,
     reset: resetClientErrors,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(postImageSchema),
+    resolver: zodResolver(createPostSchema),
     defaultValues: { post_title: '', post_content: '' },
   });
 
@@ -57,7 +54,10 @@ const CreatePostForm = () => {
     reset: resetServerError,
   } = useMutation({
     mutationFn: CreatePostAction,
-    onSettled: () => toast.success('Post has been'),
+    onSuccess: ({ slug }) => {
+      toast.success('Post has been created');
+      router.push(`/${slug}`);
+    },
   });
 
   const handleReset = () => {
@@ -69,15 +69,16 @@ const CreatePostForm = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((values) => {
-        const imageForm = new FormData();
-        if (values.post_img) imageForm.append('post_img', values.post_img[0]);
-        mutate({
-          post_title: values.post_title,
-          post_content: values.post_content,
-          post_img: imageForm,
-        });
-      })}
+      onSubmit={handleSubmit(
+        (values) => {
+          mutate({
+            post_title: values.post_title,
+            post_content: values.post_content,
+            post_img: values.post_img ? Array.from(values.post_img) : undefined,
+          });
+        },
+        (invalid) => console.log('validation failed', invalid),
+      )}
       className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>
@@ -132,19 +133,72 @@ const CreatePostForm = () => {
             </Field>
           )}
         />
-        <Field data-invalid={!!errors.post_title}>
+
+        <Field data-invalid={!!errors.post_img}>
           <FieldLabel
             htmlFor="post_img"
             className="text-pacifica text-base font-semibold"
           >
-            Upload Image(s)
+            Upload up to {IMAGE_MAX_NUM} images
             <span className="text-sm font-light">{`( optional )`}</span>
           </FieldLabel>
-          <Input
-            id="post_img"
-            type="file"
-            {...register('post_img')}
-            className="bg-background h-10 text-base md:text-lg cursor-pointer"
+          <Controller
+            name="post_img"
+            control={control}
+            render={({ field }) => {
+              const files = (field.value as File[] | undefined) ?? [];
+              const limitReached = files.length >= IMAGE_MAX_NUM;
+              const isBusy = isAddingImages || isPending;
+              return (
+                <>
+                  <Input
+                    ref={fileInputRef}
+                    id="post_img"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    hidden
+                    onChange={async (e) => {
+                      const picked = Array.from(e.target.files ?? []);
+                      e.target.value = '';
+                      if (picked.length === 0) return;
+
+                      setIsAddingImages(true);
+                      try {
+                        field.onChange(
+                          [...files, ...picked].slice(0, IMAGE_MAX_NUM),
+                        );
+                        void trigger('post_img');
+                      } finally {
+                        setIsAddingImages(false);
+                      }
+                    }}
+                  />
+
+                  <ImagePreviews
+                    files={files}
+                    onRemove={(index) => {
+                      field.onChange(files.filter((_, i) => i !== index));
+                      void trigger('post_img');
+                    }}
+                  />
+
+                  <div className="flex items-center gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={limitReached || isBusy}
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {isBusy ? 'Uploading..' : 'Choose images'}
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      {files.length} / {IMAGE_MAX_NUM} selected
+                    </span>
+                  </div>
+                </>
+              );
+            }}
           />
           {errors.post_img && <FieldError errors={[errors.post_img]} />}
         </Field>
@@ -168,7 +222,9 @@ const CreatePostForm = () => {
           </Button>
         </Field>
 
-        {error && <FieldError>{error.message}</FieldError>}
+        {error && !error.message.includes('NEXT_REDIRECT') && (
+          <FieldError>{error.message}</FieldError>
+        )}
       </FieldGroup>
 
       <ConfirmAlert

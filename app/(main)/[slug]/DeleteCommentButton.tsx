@@ -24,12 +24,12 @@ const DeleteCommentButton = ({ commentId }: { commentId: string }) => {
       <Button
         type="button"
         variant="outline"
-        className="w-fit p-4.5 text-lg md:text-lg font-normal border-0 bg-transparent cursor-pointer"
+        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-none px-7 text-foreground bg-background cursor-pointer"
         onClick={() => {
           setShowConfirmAlert(true);
         }}
       >
-        <RiDeleteBin5Line className="size-6" />
+        <RiDeleteBin5Line className="size-5" />
       </Button>
 
       <ConfirmAlert

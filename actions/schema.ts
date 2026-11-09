@@ -1,10 +1,11 @@
 import { z } from 'zod';
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
 export const logInSchema = z.object({
-  email: z.email('Zod says incorrect email pattern..!'),
-  password: z
-    .string()
-    .min(5, 'Zod says password should be at least 6 charactors'),
+  email: z.email('Incorrect email pattern..!'),
+  password: z.string().min(5, 'Password should be at least 6 charactors'),
 });
 
 export const signUpSchema = z
@@ -36,11 +37,29 @@ export const signUpSchema = z
 export const createPostSchema = z.object({
   post_title: z
     .string('Title is required')
-    .min(10, 'Title at least 10 charactors'),
+    .min(10, 'Title at least 10 characters'),
   post_content: z.string().optional(),
-  post_img: z.instanceof(FormData).optional(),
+  post_img: z
+    .array(z.instanceof(File))
+    .max(3, 'You can upload a maximum of 3 images')
+    .refine(
+      (files) => files.every((file) => file.size <= MAX_FILE_SIZE),
+      'Image size must be under 5MB',
+    )
+    .refine(
+      (files) => files.every((file) => ACCEPTED_TYPES.includes(file.type)),
+      'Only JPEG, JPG, PNG or WebP images are allowed',
+    )
+    .optional(),
+});
+export const editPostSchema = createPostSchema.extend({
+  keep_image_urls: z.array(z.string()),
 });
 
 export const commentSchema = z.object({
   comment_content: z.string().min(3, 'Comment must be at least 03 charactors'),
+});
+
+export const editCommentSchema = commentSchema.extend({
+  comment_id: z.string(),
 });

@@ -20,14 +20,14 @@ const EditPostPage = async ({ params }: { params: { slugEdit: string } }) => {
 
       {data && (
         <>
-          <h1 className="text-2xl sm:text-3xl font-extralight py-10 z-100 text-secondary text-center px-3">
-            Edit Post: {data.post_title}
+          <h1 className="flex w-full max-w-3xl justify-center text-2xl sm:text-3xl font-extralight py-10 z-100 text-secondary text-center px-3">
+            Make changes to your post
           </h1>
           <EditPostForm
             initialValues={{
               post_title: data.post_title,
               post_content: data.post_content,
-              post_img: data.post_img,
+              post_images: data.td_image.map((img) => img.image_url),
             }}
             postId={data.id}
           />

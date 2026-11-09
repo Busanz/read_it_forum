@@ -1,10 +1,10 @@
 import DeleteCommentButton from '@/app/(main)/[slug]/DeleteCommentButton';
 import { PostCommentsType } from '@/lib/supabase/queries';
-import { Separator } from '../ui/separator';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { getInitialUserName } from '@/lib/helpers/avatarInitials';
 import { humanizeTime } from '@/lib/helpers/humanize-time';
 import { CardDescription, CardFooter } from '../ui/card';
+import EditComment from '@/app/(main)/[slug]/EditComment';
 
 const Comments = ({
   comments,
@@ -53,8 +53,12 @@ const Comments = ({
               </CardDescription>
 
               {(isAuthor || currentUser === comment.comment_user_id.id) && (
-                <CardFooter className="flex w-full justify-end">
+                <CardFooter className="flex w-full gap-3 justify-end">
                   <DeleteCommentButton commentId={comment.id} />
+                  <EditComment
+                    commentId={comment.id}
+                    commentContent={comment.comment_content}
+                  />
                 </CardFooter>
               )}
             </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import CreatePostForm from './form';
 
 const CreatePostPage = () => {

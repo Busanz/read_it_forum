@@ -34,6 +34,7 @@ const SearchResultPage = async ({
             className="flex w-full"
           >
             <PostCard
+              post_id={post.id}
               post_content={post.post_content || ''}
               post_title={post.post_title}
               post_author={post.post_author.user_name}

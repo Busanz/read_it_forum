@@ -1,12 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  // FieldLabel,
-} from '@/components/ui/field';
+import { Field, FieldError, FieldGroup } from '@/components/ui/field';
 import {
   InputGroup,
   InputGroupAddon,
@@ -129,7 +124,9 @@ const AddComment = ({ postId }: AddCommentProps) => {
           )}
         />
 
-        {error && <FieldError>{error.message}</FieldError>}
+        {error && !error.message.includes('NEXT_REDIRECT') && (
+          <FieldError>{error.message}</FieldError>
+        )}
       </FieldGroup>
 
       <ConfirmAlert

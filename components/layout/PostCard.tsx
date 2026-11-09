@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -13,15 +12,19 @@ import { TbMessage } from 'react-icons/tb';
 import { truncateWords } from '@/lib/helpers/truncate-words';
 import { humanizeTime } from '@/lib/helpers/humanize-time';
 import { getInitialUserName } from '@/lib/helpers/avatarInitials';
+import { PostImageCarousel } from './PostImageCarousel';
+import Link from 'next/link';
 
 type CardImageProps = {
   post_content: string;
   post_title: string;
-  post_img?: string;
+  post_img?: string[];
   post_author: string;
   created_at: string;
   post_comment_count?: number;
   isSlugPage?: boolean;
+  post_id: string;
+  post_slug?: string;
 };
 
 export function PostCard({
@@ -32,16 +35,46 @@ export function PostCard({
   created_at,
   post_comment_count = 0,
   isSlugPage = false,
+  post_id,
+  post_slug,
 }: CardImageProps) {
   return (
     <Card className="relative mx-auto w-full mb-4">
-      <CardHeader>
-        <CardAction>
-          <Badge variant="secondary">Featured</Badge>
-        </CardAction>
-        <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10">
-          {post_title}
-        </CardTitle>
+      <CardHeader className="flex flex-col">
+        {!isSlugPage ? (
+          <Link
+            key={post_id}
+            href={`/${post_slug}`}
+            className="flex w-full justify-between"
+          >
+            <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10">
+              {post_title}
+            </CardTitle>
+            <CardAction className="flex w-fit justify-end">
+              <Badge
+                variant="secondary"
+                className="px-4 py-3 font-normal text-sm  bg-indigo-100"
+              >
+                Featured
+              </Badge>
+            </CardAction>
+          </Link>
+        ) : (
+          <div className="flex w-full justify-between">
+            <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10">
+              {post_title}
+            </CardTitle>
+            <CardAction className="flex w-fit justify-end">
+              <Badge
+                variant="secondary"
+                className="px-4 py-3 font-normal text-sm  bg-indigo-100"
+              >
+                Featured
+              </Badge>
+            </CardAction>
+          </div>
+        )}
+
         <div className="flex gap-3 my-3">
           <Avatar size="lg">
             <AvatarFallback className="bg-indigo-200">
@@ -54,21 +87,25 @@ export function PostCard({
           </div>
         </div>
 
-        <div>
-          {post_img && (
-            <Image
-              src={post_img}
-              alt="Event cover"
-              width={100}
-              height={100}
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className={`relative aspect-video w-full ${isSlugPage ? 'max-w-xl' : 'max-w-lg'}`}
-            />
-          )}
+        <div className="flex flex-col w-full">
+          <PostImageCarousel
+            images={post_img || []}
+            title={post_title}
+            isSlugPage={isSlugPage}
+          />
 
           <CardDescription className="font-normal text-base sm:text-[1.1rem] text-foreground py-5">
             {!isSlugPage ? truncateWords(post_content) : post_content}
           </CardDescription>
+
+          {!isSlugPage && (
+            <Link
+              href={`/${post_slug}`}
+              className="text-header underline underline-offset-2"
+            >
+              Read more
+            </Link>
+          )}
         </div>
       </CardHeader>
 

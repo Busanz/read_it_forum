@@ -2,7 +2,6 @@ import HomePosts from '@/components/layout/HomePosts';
 import { getHomePosts } from '@/lib/supabase/queries';
 import { createClient } from '@/lib/supabase/serverClient';
 
-// export const revalidation = 600;
 export default async function Home() {
   const supabase = await createClient();
   const { data, error } = await getHomePosts(supabase);
