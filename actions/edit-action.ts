@@ -116,12 +116,11 @@ export const EditPostAction = async ({
     .filter((path): path is string => path !== null);
 
   if (removedImagesPaths.length > 0) {
-    const { data: deletedImages, error: imageError } = await supabase.storage
+    const { error: imageError } = await supabase.storage
       .from(BUCKET)
       .remove(removedImagesPaths);
 
     if (imageError) throw new Error('Storege cleanup failed');
-    console.log(deletedImages);
   }
 
   revalidatePath('/');

@@ -109,16 +109,37 @@ export function PostCard({
         </div>
       </CardHeader>
 
-      <CardFooter>
-        <div className="flex font-light items-center">
-          <TbMessage size={30} strokeWidth={0.75} />
-          <p className="pl-2 text-header">
-            {post_comment_count === 0
-              ? 'Add comment'
-              : `${String(post_comment_count).padStart(2, '0')} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
-          </p>
-        </div>
-      </CardFooter>
+      {!isSlugPage ? (
+        <Link
+          key={post_id}
+          href={`/${post_slug}`}
+          className="flex w-full justify-between"
+        >
+          <CardFooter className="w-full">
+            <div className="flex w-full font-light items-center">
+              <TbMessage size={30} strokeWidth={0.75} />
+              <p className="pl-2 text-header">
+                {post_comment_count === 0
+                  ? 'Add comment'
+                  : `${String(post_comment_count).padStart(2, '0')} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
+              </p>
+            </div>
+          </CardFooter>
+        </Link>
+      ) : (
+        <>
+          <CardFooter>
+            <div className="flex font-light items-center">
+              <TbMessage size={30} strokeWidth={0.75} />
+              <p className="pl-2 text-header">
+                {post_comment_count === 0
+                  ? 'Add comment'
+                  : `${String(post_comment_count).padStart(2, '0')} ${post_comment_count === 1 ? 'discussion' : 'discussions'}`}
+              </p>
+            </div>
+          </CardFooter>
+        </>
+      )}
     </Card>
   );
 }

@@ -60,8 +60,8 @@ const AddComment = ({ postId }: AddCommentProps) => {
       noValidate
       onSubmit={handleSubmit((values) =>
         mutate({
-          commentData: { comment_content: values.comment_content },
           postId,
+          commentData: { comment_content: values.comment_content },
         }),
       )}
       className="flex my-5 text-black"
@@ -108,7 +108,7 @@ const AddComment = ({ postId }: AddCommentProps) => {
                         type="submit"
                         variant="outline"
                         disabled={isPending}
-                        className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8 bg-foreground text-background"
+                        className="rounded-full text-sm py-4.5 md:text-lg font-semibold border px-8 bg-header/60 text-background cursor-pointer"
                       >
                         {isPending ? 'Adding comment...' : <IoAdd />}
                       </Button>

@@ -1,21 +1,23 @@
-import DeleteCommentButton from '@/app/(main)/[slug]/DeleteCommentButton';
 import { PostCommentsType } from '@/lib/supabase/queries';
-import { Avatar, AvatarFallback } from '../ui/avatar';
-import { getInitialUserName } from '@/lib/helpers/avatarInitials';
-import { humanizeTime } from '@/lib/helpers/humanize-time';
-import { CardDescription, CardFooter } from '../ui/card';
-import EditComment from '@/app/(main)/[slug]/EditComment';
+import { buildCommentTree, CommentNode } from '@/lib/helpers/buildCommentTree';
+import CommentItem from './CommentItem';
+import { Separator } from '@/components/ui/separator';
+import { Fragment } from 'react/jsx-runtime';
 
 const Comments = ({
   comments,
   isAuthor,
   currentUser,
+  postId,
 }: {
   comments: PostCommentsType;
   isAuthor: boolean;
   currentUser: string | null;
+  postId: string;
 }) => {
   const commentCount: number = comments.length ?? 0;
+  const commnetTree: CommentNode[] = buildCommentTree(comments);
+
   return (
     <>
       <h2 className="text-base sm:text-lg font-medium pb-2">
@@ -28,43 +30,23 @@ const Comments = ({
       {commentCount === 0 && (
         <p className="pt-2 font-light">Add the first comment for the post</p>
       )}
-      {comments && (
-        <div className="flex flex-col">
-          {comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="flex flex-col bg-header/5 px-4 pt-5 rounded-xl text-black mt-2"
-            >
-              <div className="flex items-center gap-4">
-                <Avatar size="lg">
-                  <AvatarFallback className="bg-indigo-200">
-                    {getInitialUserName(comment.comment_user_id.user_name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                  <p className="font-bold text-base">
-                    {comment.comment_user_id.user_name}
-                  </p>
-                  <p>{humanizeTime(comment.created_at)}</p>
-                </div>
-              </div>
-              <CardDescription className="py-4 px-2 mb-4 rounded-lg text-base sm:sm:text-[1.1rem] text-foreground">
-                {comment.comment_content}
-              </CardDescription>
 
-              {(isAuthor || currentUser === comment.comment_user_id.id) && (
-                <CardFooter className="flex w-full gap-3 justify-end">
-                  <DeleteCommentButton commentId={comment.id} />
-                  <EditComment
-                    commentId={comment.id}
-                    commentContent={comment.comment_content}
-                  />
-                </CardFooter>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col">
+        {commnetTree.map((comment, index) => (
+          <Fragment key={comment.id}>
+            <CommentItem
+              comment={comment}
+              isAuthor={isAuthor}
+              currentUser={currentUser}
+              postId={postId}
+              depth={0}
+            />
+            {index < commnetTree.length - 1 && (
+              <Separator className="mt-6 mb-4" />
+            )}
+          </Fragment>
+        ))}
+      </div>
     </>
   );
 };

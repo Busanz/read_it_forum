@@ -34,8 +34,15 @@ const ConfirmAlert = ({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>{btnLable}</AlertDialogAction>
+          <AlertDialogCancel className="rounded-full px-5">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className="rounded-full px-5 bg-header/60 text-background"
+          >
+            {btnLable}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -39,7 +39,7 @@ export const getPostComments = async (postId: string) => {
   return await supabase
     .from('td_comments')
     .select(
-      'id, comment_content, created_at, comment_user_id("id","user_name")',
+      'id, comment_content, created_at, comment_parent_id, comment_user_id(id, user_name)',
     )
     .eq('comment_post_id', postId)
     .order('created_at', { ascending: false });

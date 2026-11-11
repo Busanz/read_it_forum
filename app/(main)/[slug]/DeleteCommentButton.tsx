@@ -8,12 +8,23 @@ import { useState } from 'react';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { toast } from 'sonner';
 
-const DeleteCommentButton = ({ commentId }: { commentId: string }) => {
+type DeleteCommentButtonProps = {
+  commentId: string;
+  setShowButton: (close: boolean) => void;
+};
+
+const DeleteCommentButton = ({
+  commentId,
+  setShowButton,
+}: DeleteCommentButtonProps) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
 
   const { mutate } = useMutation({
     mutationFn: DeleteCommentAction,
-    onSettled: () => toast.success('Comment has been deleted'),
+    onSuccess: () => {
+      toast.success('Comment has been deleted');
+      setShowButton(false);
+    },
   });
 
   const handleClick = () => {
@@ -24,7 +35,7 @@ const DeleteCommentButton = ({ commentId }: { commentId: string }) => {
       <Button
         type="button"
         variant="outline"
-        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-none px-7 text-foreground bg-background cursor-pointer"
+        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-none px-7 text-foreground bg-transparent cursor-pointer"
         onClick={() => {
           setShowConfirmAlert(true);
         }}

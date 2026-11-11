@@ -69,16 +69,13 @@ const CreatePostForm = () => {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit(
-        (values) => {
-          mutate({
-            post_title: values.post_title,
-            post_content: values.post_content,
-            post_img: values.post_img ? Array.from(values.post_img) : undefined,
-          });
-        },
-        (invalid) => console.log('validation failed', invalid),
-      )}
+      onSubmit={handleSubmit((values) => {
+        mutate({
+          post_title: values.post_title,
+          post_content: values.post_content,
+          post_img: values.post_img ? Array.from(values.post_img) : undefined,
+        });
+      })}
       className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>

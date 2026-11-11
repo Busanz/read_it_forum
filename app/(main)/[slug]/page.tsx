@@ -29,7 +29,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
   if (commentsError) throw commentsError;
 
   return (
-    <section className="flex flex-col items-center w-full max-w-5xl py-10 md:py-10 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] lg:rounded-lg">
+    <section className="flex flex-col items-center w-full max-w-5xl py-10 md:py-10 px-4 md:px-10 my-10 bg-linear-to-r/srgb from-[#3000a075] to-[#0079bf97] rounded-none lg:rounded-lg">
       {singlePost && (
         <>
           <PostCard
@@ -51,6 +51,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
                     comments={comments}
                     isAuthor={isAuthor}
                     currentUser={user ? user.id : null}
+                    postId={singlePost.id}
                   />
                 )}
               </div>
@@ -69,4 +70,5 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
     </section>
   );
 };
+
 export default PostPage;

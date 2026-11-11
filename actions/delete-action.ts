@@ -46,11 +46,10 @@ export const DeletePostAction = async (postId: string) => {
     .filter((path): path is string => path !== null);
 
   if (bucketPaths.length > 0) {
-    const { data, error: bucketError } = await supabase.storage
+    const { error: bucketError } = await supabase.storage
       .from(BUCKET)
       .remove(bucketPaths);
     if (bucketError) throw new Error('Storege cleanup failed');
-    console.log(data);
   }
 
   revalidatePath('/');

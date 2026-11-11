@@ -27,16 +27,20 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from '@/components/ui/input-group';
-import { IoCheckmark } from 'react-icons/io5';
 
 const CONTENT_MAX = 3000;
 
 type EditCommentProps = {
   commentId: string;
   commentContent: string;
+  setShowButton: (close: boolean) => void;
 };
 
-const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
+const EditComment = ({
+  commentId,
+  commentContent,
+  setShowButton,
+}: EditCommentProps) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState<boolean>(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
@@ -60,6 +64,7 @@ const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
     onSuccess: () => {
       toast.success('Comment has been changed');
       setShowEditDialog(false);
+      setShowButton(false);
     },
   });
 
@@ -74,7 +79,7 @@ const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
       <Button
         type="button"
         variant="outline"
-        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-none px-7 text-foreground bg-background cursor-pointer"
+        className="rounded-full text-sm py-4.5 md:text-lg font-normal border-none px-7 text-foreground bg-transparent cursor-pointer"
         onClick={() => setShowConfirmAlert(true)}
       >
         <FiEdit className="size-4.5" />
@@ -138,7 +143,7 @@ const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
                               type="button"
                               variant="outline"
                               aria-label="Restore the original comment"
-                              className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8"
+                              className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8 bg-header/60"
                               onClick={() => field.onChange(commentContent)}
                             >
                               <RiResetLeftLine />
@@ -150,7 +155,7 @@ const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
                             variant="outline"
                             aria-label="Save comment"
                             disabled={isPending}
-                            className="rounded-full text-sm py-4.5 md:text-base font-normal border px-7 bg-header/70 text-background"
+                            className="rounded-full text-sm py-4 md:text-base font-normal border px-4 bg-header/60 text-background"
                           >
                             {isPending ? 'Saving...' : 'Save comment'}
                           </Button>
@@ -174,7 +179,7 @@ const EditComment = ({ commentId, commentContent }: EditCommentProps) => {
                     type="button"
                     variant="outline"
                     disabled={isPending}
-                    className="max-w-20"
+                    className="max-w-20 rounded-full px-5"
                   >
                     Cancel
                   </Button>
