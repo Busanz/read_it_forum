@@ -26,6 +26,7 @@ const EditPostPage = async ({ params }: { params: { slugEdit: string } }) => {
           <EditPostForm
             initialValues={{
               post_title: data.post_title,
+              post_category: data.post_category,
               post_content: data.post_content,
               post_images: data.td_image.map((img) => img.image_url),
             }}

@@ -7,7 +7,7 @@ export const getHomePosts = async (
   return await supabase
     .from('td_post')
     .select(
-      'id, created_at, post_title, post_content, post_slug, post_author("id","user_name"),td_comments(count),td_image("image_url", "image_position")',
+      'id, created_at, post_title, post_category, post_content, post_slug, post_author("id","user_name"),td_comments(count),td_image("image_url", "image_position")',
     )
     .order('created_at', { ascending: false })
     .order('image_position', { referencedTable: 'td_image', ascending: true });
@@ -18,7 +18,7 @@ export const getSinglePost = async (slug: string) => {
   return await supabase
     .from('td_post')
     .select(
-      'id, post_title, post_content, created_at, post_author("id","user_name"), td_image("image_url", "image_position")',
+      'id, post_title, post_category, post_content, created_at, post_author("id","user_name"), td_image("image_url", "image_position")',
     )
     .eq('post_slug', slug)
     .single();
@@ -29,7 +29,7 @@ export const getSearchResult = async (searchQuery: string) => {
   return await supabase
     .from('td_post')
     .select(
-      'id, post_title, post_content, post_slug, created_at, post_author("id","user_name"),td_comments(count)',
+      'id, post_title,post_category, post_content, post_slug, created_at, post_author("id","user_name"), td_comments(count)',
     )
     .textSearch('post_title', searchQuery);
 };

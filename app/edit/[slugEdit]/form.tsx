@@ -34,12 +34,24 @@ import {
 } from '@/components/ui/attachment';
 import ImagePreviews from '@/components/layout/ImagePreviews';
 import { useRouter } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { POST_CATEGORIES } from '@/app/(post)/create/post-categories';
 
 const CONTENT_MAX = 3000;
 const IMAGE_MAX_NUM = 3;
 
 type EditPostFormProps = {
-  initialValues: Pick<Tables<'td_post'>, 'post_title' | 'post_content'> & {
+  initialValues: Pick<
+    Tables<'td_post'>,
+    'post_title' | 'post_content' | 'post_category'
+  > & {
     post_images: string[];
   };
   postId: string;
@@ -65,6 +77,7 @@ const EditPostForm = ({ initialValues, postId }: EditPostFormProps) => {
     resolver: zodResolver(createPostSchema),
     defaultValues: {
       post_title: initialValues.post_title,
+      post_category: initialValues.post_category!,
       post_content: initialValues.post_content || undefined,
       post_img: [] as File[],
     },
@@ -99,6 +112,7 @@ const EditPostForm = ({ initialValues, postId }: EditPostFormProps) => {
           postId,
           postData: {
             post_title: values.post_title,
+            post_category: values.post_category,
             post_content: values.post_content,
             post_img: values.post_img ?? [],
             keep_image_urls: existingImages,
@@ -123,7 +137,45 @@ const EditPostForm = ({ initialValues, postId }: EditPostFormProps) => {
           />
           {errors.post_title && <FieldError errors={[errors.post_title]} />}
         </Field>
+        <Controller
+          name="post_category"
+          control={control}
+          render={({ field }) => (
+            <Field data-invalid={!!errors.post_category}>
+              <FieldLabel
+                htmlFor="post_category"
+                className="text-pacifica text-base font-semibold"
+              >
+                Post Category
+              </FieldLabel>
 
+              <Select
+                items={POST_CATEGORIES}
+                value={field.value}
+                onValueChange={(value) => {
+                  if (value) field.onChange(value);
+                }}
+              >
+                <SelectTrigger id="post_category" className="w-full max-w-64">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {POST_CATEGORIES.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {errors.post_category && (
+                <FieldError errors={[errors.post_category]} />
+              )}
+            </Field>
+          )}
+        />
         <Controller
           name="post_content"
           control={control}

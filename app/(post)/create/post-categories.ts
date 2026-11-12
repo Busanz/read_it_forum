@@ -1,5 +1,4 @@
 export const POST_CATEGORIES = [
-  { label: 'Select a category', value: null },
   { label: 'Web Development', value: 'web-development' },
   { label: 'Frontend', value: 'frontend' },
   { label: 'Backend', value: 'backend' },
@@ -12,5 +11,5 @@ export const POST_CATEGORIES = [
   { label: 'Hardware & Data Centers', value: 'hardware-data-centers' },
   { label: 'Tools & Productivity', value: 'tools' },
   { label: 'Career & Learning', value: 'career-learning' },
-  { label: 'General Discussion', value: 'general' },
+  { label: 'General', value: 'general' },
 ];

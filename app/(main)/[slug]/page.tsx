@@ -5,7 +5,7 @@ import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
 import Comments from '@/components/layout/Comments';
 import AddComment from './AddComment';
-import { PostCard } from '@/components/layout/PostCard';
+import PostCard from '@/components/layout/PostCard';
 import { Card, CardHeader } from '@/components/ui/card';
 
 const PostPage = async ({ params }: { params: { slug: string } }) => {
@@ -34,6 +34,7 @@ const PostPage = async ({ params }: { params: { slug: string } }) => {
         <>
           <PostCard
             post_id={singlePost.id}
+            post_category={singlePost.post_category!}
             post_content={singlePost.post_content || ''}
             post_title={singlePost.post_title}
             post_img={singlePost.td_image.map((img) => img.image_url)}

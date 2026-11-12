@@ -31,6 +31,7 @@ export const CreatePostAction = async (
     .insert({
       post_title: parsedData.post_title,
       post_content: parsedData.post_content,
+      post_category: parsedData.post_category,
       post_slug: postSlug,
       post_author: user.id,
     })

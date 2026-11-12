@@ -1,7 +1,11 @@
 import { z } from 'zod';
+import { POST_CATEGORIES } from '@/app/(post)/create/post-categories';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ACCEPTED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const CATEGORY_VALUES: string[] = POST_CATEGORIES.map(
+  (catItem) => catItem.value,
+);
 
 export const logInSchema = z.object({
   email: z.email('Incorrect email pattern..!'),
@@ -39,6 +43,11 @@ export const createPostSchema = z.object({
     .string('Title is required')
     .min(10, 'Title at least 10 characters'),
   post_content: z.string().optional(),
+  post_category: z
+    .string('Category is required')
+    .min(1, 'Select a category')
+    .refine((value) => CATEGORY_VALUES.includes(value), 'Invalid Category'),
+
   post_img: z
     .array(z.instanceof(File))
     .max(3, 'You can upload a maximum of 3 images')

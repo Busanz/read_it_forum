@@ -51,11 +51,6 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* body { */
-/* font-family: Arial, Helvetica, sans-serif; */
-/* font-family: sans-serif; */
-/* } */
-
 :root {
   --background: oklch(100% 0.00011 271.152);
   --foreground: oklch(23.613% 0.00152 16.294);

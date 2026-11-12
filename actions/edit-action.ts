@@ -70,6 +70,7 @@ export const EditPostAction = async ({
     .update({
       post_title: parsedData.post_title,
       post_content: parsedData.post_content ?? null,
+      post_category: parsedData.post_category,
     })
     .eq('id', postId)
     .select('post_slug')

@@ -14,8 +14,11 @@ import { humanizeTime } from '@/lib/helpers/humanize-time';
 import { getInitialUserName } from '@/lib/helpers/avatarInitials';
 import { PostImageCarousel } from './PostImageCarousel';
 import Link from 'next/link';
+import { getCategoryLable } from '@/lib/helpers/getcCategoryLable';
 
 type CardImageProps = {
+  post_id: string;
+  post_category: string;
   post_content: string;
   post_title: string;
   post_img?: string[];
@@ -23,11 +26,12 @@ type CardImageProps = {
   created_at: string;
   post_comment_count?: number;
   isSlugPage?: boolean;
-  post_id: string;
   post_slug?: string;
 };
 
-export function PostCard({
+const PostCard = ({
+  post_id,
+  post_category,
   post_content,
   post_title,
   post_img,
@@ -35,9 +39,8 @@ export function PostCard({
   created_at,
   post_comment_count = 0,
   isSlugPage = false,
-  post_id,
   post_slug,
-}: CardImageProps) {
+}: CardImageProps) => {
   return (
     <Card className="relative mx-auto w-full mb-4">
       <CardHeader className="flex flex-col">
@@ -55,7 +58,7 @@ export function PostCard({
                 variant="secondary"
                 className="px-4 py-3 font-normal text-sm  bg-indigo-100"
               >
-                Featured
+                {getCategoryLable(post_category)}
               </Badge>
             </CardAction>
           </Link>
@@ -69,7 +72,7 @@ export function PostCard({
                 variant="secondary"
                 className="px-4 py-3 font-normal text-sm  bg-indigo-100"
               >
-                Featured
+                {getCategoryLable(post_category)}
               </Badge>
             </CardAction>
           </div>
@@ -142,4 +145,6 @@ export function PostCard({
       )}
     </Card>
   );
-}
+};
+
+export default PostCard;

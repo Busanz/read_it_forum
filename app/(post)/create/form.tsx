@@ -25,6 +25,15 @@ import { CreatePostAction } from '@/actions/create-action';
 import { toast } from 'sonner';
 import ImagePreviews from '@/components/layout/ImagePreviews';
 import { useRouter } from 'next/navigation';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { POST_CATEGORIES } from './post-categories';
 
 const CONTENT_MAX = 3000;
 const IMAGE_MAX_NUM = 3;
@@ -44,7 +53,11 @@ const CreatePostForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createPostSchema),
-    defaultValues: { post_title: '', post_content: '' },
+    defaultValues: {
+      post_title: '',
+      post_content: '',
+      post_category: 'general',
+    },
   });
 
   const {
@@ -72,6 +85,7 @@ const CreatePostForm = () => {
       onSubmit={handleSubmit((values) => {
         mutate({
           post_title: values.post_title,
+          post_category: values.post_category,
           post_content: values.post_content,
           post_img: values.post_img ? Array.from(values.post_img) : undefined,
         });
@@ -94,6 +108,46 @@ const CreatePostForm = () => {
           />
           {errors.post_title && <FieldError errors={[errors.post_title]} />}
         </Field>
+
+        <Controller
+          name="post_category"
+          control={control}
+          render={({ field }) => (
+            <Field data-invalid={!!errors.post_category}>
+              <FieldLabel
+                htmlFor="post_category"
+                className="text-pacifica text-base font-semibold"
+              >
+                Post Category
+              </FieldLabel>
+
+              <Select
+                items={POST_CATEGORIES}
+                value={field.value}
+                onValueChange={(value) => {
+                  if (value) field.onChange(value);
+                }}
+              >
+                <SelectTrigger id="post_category" className="w-full max-w-64">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {POST_CATEGORIES.map((item) => (
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              {errors.post_category && (
+                <FieldError errors={[errors.post_category]} />
+              )}
+            </Field>
+          )}
+        />
 
         <Controller
           name="post_content"

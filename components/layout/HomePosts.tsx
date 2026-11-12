@@ -3,7 +3,7 @@
 import { getHomePosts, HomePostType } from '@/lib/supabase/queries';
 import { useQuery } from '@tanstack/react-query';
 import { createClient } from '@/lib/supabase/browserClient';
-import { PostCard } from './PostCard';
+import PostCard from './PostCard';
 
 const HomePosts = ({ post }: { post: HomePostType }) => {
   const supabase = createClient();
@@ -24,6 +24,7 @@ const HomePosts = ({ post }: { post: HomePostType }) => {
           <PostCard
             key={post.id}
             post_id={post.id}
+            post_category={post.post_category!}
             post_slug={post.post_slug}
             post_content={post.post_content || ''}
             post_title={post.post_title}

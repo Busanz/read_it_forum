@@ -143,7 +143,7 @@ const EditComment = ({
                               type="button"
                               variant="outline"
                               aria-label="Restore the original comment"
-                              className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8 bg-header/60"
+                              className="rounded-full text-sm py-4.5 md:text-lg font-normal border px-8"
                               onClick={() => field.onChange(commentContent)}
                             >
                               <RiResetLeftLine />

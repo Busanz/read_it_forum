@@ -1,7 +1,6 @@
-import { PostCard } from '@/components/layout/PostCard';
+import PostCard from '@/components/layout/PostCard';
 import { Separator } from '@/components/ui/separator';
 import { getSearchResult } from '@/lib/supabase/queries';
-import Link from 'next/link';
 
 const SearchResultPage = async ({
   searchParams,
@@ -28,20 +27,17 @@ const SearchResultPage = async ({
       )}
       {searchResult &&
         searchResult.map((post) => (
-          <Link
+          <PostCard
             key={post.id}
-            href={`/${post.post_slug}`}
-            className="flex w-full"
-          >
-            <PostCard
-              post_id={post.id}
-              post_content={post.post_content || ''}
-              post_title={post.post_title}
-              post_author={post.post_author.user_name}
-              created_at={post.created_at}
-              post_comment_count={post.td_comments?.[0]?.count ?? 0}
-            />
-          </Link>
+            post_id={post.id}
+            post_category={post.post_category!}
+            post_content={post.post_content || ''}
+            post_title={post.post_title}
+            post_author={post.post_author.user_name}
+            created_at={post.created_at}
+            post_comment_count={post.td_comments?.[0]?.count ?? 0}
+            post_slug={post.post_slug}
+          />
         ))}
     </section>
   );
