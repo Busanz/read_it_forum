@@ -14,12 +14,12 @@ const Logo = () => {
         <Image
           src={'/logo-primary.png'}
           alt={'Forum Logo image'}
-          width={52}
-          height={52}
-          className="w-10 h-10 sm:w-13 sm:h-13"
+          width={48}
+          height={48}
+          className="w-10 h-10 sm:w-12 sm:h-12"
         />
         <p
-          className={`${logoFont.className} hidden sm:block text-xl text-background md:text-2xl lg:text-[1.75rem] uppercase`}
+          className={`${logoFont.className} hidden sm:block text-xl text-background md:text-2xl lg:text-[1.7rem] uppercase`}
         >
           Read IT{' '}
           <span className="capitalize font-extralight font-sans">

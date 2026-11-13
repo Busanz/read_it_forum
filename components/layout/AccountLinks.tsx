@@ -34,7 +34,7 @@ const AccountLinks = async () => {
               className="rounded-full text-sm py-4 md:text-lg border border-secondary text-secondary bg-transparent cursor-pointer font-normal"
             >
               <MdOutlinePostAdd />
-              Add Post
+              <span className="max-[400px]:hidden">Add Post</span>
             </Button>
           </Link>
 
@@ -44,7 +44,7 @@ const AccountLinks = async () => {
             onClick={LogOutAction}
           >
             <IoIosLogOut />
-            Log Out
+            <span className="max-[400px]:hidden">Log Out</span>
           </Button>
         </>
       ) : (
@@ -60,7 +60,7 @@ const AccountLinks = async () => {
           <Link href={'/oauth/login'}>
             <Button className="rounded-full text-sm md:text-lg py-4 border border-secondary text-secondary bg-transparent font-normal">
               <RxAvatar />
-              Log In
+              <span className="max-[400px]:hidden">Log In</span>
             </Button>
           </Link>
 
@@ -70,7 +70,7 @@ const AccountLinks = async () => {
               className="rounded-full text-sm py-4 md:text-lg border border-secondary text-secondary bg-transparent font-normal"
             >
               <AiOutlineUserAdd />
-              Sign Up
+              <span className="max-[400px]:hidden">Sign Up</span>
             </Button>
           </Link>
         </>

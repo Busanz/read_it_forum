@@ -24,14 +24,38 @@ export const getSinglePost = async (slug: string) => {
     .single();
 };
 
-export const getSearchResult = async (searchQuery: string) => {
+export const getSearchResult = async ({
+  query,
+  category,
+}: {
+  query?: string;
+  category?: string;
+}) => {
   const supabase = createClient();
-  return await supabase
+
+  const term = (query ?? '')
+    .trim()
+    .replace(/[\\%_]/g, '\\$&')
+    .replace(/[,()]/g, ' ')
+    .trim();
+
+  let request = supabase
     .from('td_post')
     .select(
-      'id, post_title,post_category, post_content, post_slug, created_at, post_author("id","user_name"), td_comments(count)',
+      'id, post_title, post_category, post_content, post_slug, created_at, post_author("id","user_name"), td_comments(count)',
     )
-    .textSearch('post_title', searchQuery);
+    .order('created_at', { ascending: false });
+
+  if (term) {
+    request = request.or(
+      `post_title.ilike.%${term}%,post_content.ilike.%${term}%`,
+    );
+  }
+  if (category) {
+    request = request.eq('post_category', category);
+  }
+
+  return await request;
 };
 
 export const getPostComments = async (postId: string) => {

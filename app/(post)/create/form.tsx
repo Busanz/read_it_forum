@@ -128,7 +128,10 @@ const CreatePostForm = () => {
                   if (value) field.onChange(value);
                 }}
               >
-                <SelectTrigger id="post_category" className="w-full max-w-64">
+                <SelectTrigger
+                  id="post_category"
+                  className="w-full max-w-64 bg-background p-5 h-10 text-base md:text-lg text-foreground/80"
+                >
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>

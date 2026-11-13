@@ -127,7 +127,6 @@
       font-weight: inherit;
     }
 
-    /* Inline semantics. */
     &:where(strong, b) {
       font-weight: 600;
     }
