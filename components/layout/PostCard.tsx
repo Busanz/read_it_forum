@@ -63,11 +63,11 @@ const PostCard = ({
             </CardAction>
           </Link>
         ) : (
-          <div className="flex w-full justify-between">
-            <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10">
+          <div className="flex flex-col sm:flex-row w-full justify-between">
+            <CardTitle className="flex w-full max-w-3xl text-lg sm:text-xl text-header font-normal pr-3 sm:pr-10 order-2 sm:order-1">
               {post_title}
             </CardTitle>
-            <CardAction className="flex w-fit justify-end">
+            <CardAction className="flex w-fit justify-end order-1 sm:order-2 -ml-1 sm:ml-0 mb-2 sm:mb-0">
               <Badge
                 variant="secondary"
                 className="px-4 py-3 font-normal text-sm  bg-indigo-100"
