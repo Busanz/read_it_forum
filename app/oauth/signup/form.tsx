@@ -46,7 +46,7 @@ const SignUpForm = () => {
     <form
       noValidate
       onSubmit={handleSubmit((values) => mutate(values))}
-      className="flex flex-col w-full max-w-lg p-4 sm:p-10 rounded-2xl bg-secondary z-500"
+      className="flex flex-col w-full max-w-lg p-4 sm:p-10 mb-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>
         <Field>

@@ -119,7 +119,7 @@ const EditPostForm = ({ initialValues, postId }: EditPostFormProps) => {
           },
         });
       })}
-      className="flex flex-col w-full max-w-3xl p-4 sm:p-10 rounded-2xl bg-secondary z-500"
+      className="flex flex-col w-full max-w-3xl p-4 sm:p-10 mb-10 rounded-2xl bg-secondary z-500"
     >
       <FieldGroup>
         <Field data-invalid={!!errors.post_title}>
